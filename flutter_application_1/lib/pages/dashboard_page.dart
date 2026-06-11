@@ -127,7 +127,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Expanded(
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 80),
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
                           child: GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(

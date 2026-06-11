@@ -77,16 +77,18 @@ class _OtpInputWidgetState extends State<OtpInputWidget> {
             children: List.generate(widget.length, (i) {
               final char = i < value.length ? value[i] : '-';
               final isActive = _focusNode.hasFocus && value.length == i;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  char,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: isActive
-                        ? AppColors.primaryDarkBlue
-                        : AppColors.textPrimary,
+              return SizedBox(
+                width: 28,
+                child: Center(
+                  child: Text(
+                    char,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: isActive
+                          ? AppColors.primaryDarkBlue
+                          : AppColors.textPrimary,
+                    ),
                   ),
                 ),
               );

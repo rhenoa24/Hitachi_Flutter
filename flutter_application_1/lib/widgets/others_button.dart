@@ -4,10 +4,7 @@ import '../constants/colors.dart';
 class OthersButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const OthersButton({
-    Key? key,
-    required this.onTap,
-  }) : super(key: key);
+  const OthersButton({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +23,7 @@ class OthersButton extends StatelessWidget {
           ],
         ),
         child: const Center(
-          child: Icon(
-            Icons.exit_to_app,
-            color: Colors.white,
-            size: 50,
-          ),
+          child: Icon(Icons.exit_to_app, color: Colors.white, size: 100),
         ),
       ),
     );

@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           // Logo section
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
                                 final imgSize = constraints.maxWidth * 0.48;

@@ -83,16 +83,16 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pushReplacementNamed('/dashboard');
       }
     } else {
-      _closeOtp();
+      _clearInput();
       setState(() {
         _isLoading = false;
         _loginFailed = true;
+        _step = 'username';
       });
     }
   }
 
   void _closeOtp() {
-    _clearInput();
     setState(() {
       _step = 'username';
     });

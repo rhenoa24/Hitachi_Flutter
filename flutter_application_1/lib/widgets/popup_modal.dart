@@ -19,9 +19,7 @@ class PopupModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isVisible) {
-      return const SizedBox.shrink();
-    }
+    if (!isVisible) return const SizedBox.shrink();
 
     return Material(
       type: MaterialType.transparency,
@@ -30,92 +28,126 @@ class PopupModal extends StatelessWidget {
           // Dark overlay
           Positioned.fill(
             child: GestureDetector(
-              onTap: () {
-                // Don't close on overlay tap
-              },
-              child: Container(
-                color: AppColors.overlayDark,
-              ),
+              onTap: () {},
+              child: Container(color: AppColors.overlayDark),
             ),
           ),
-          // Modal content
-          Positioned(
-            bottom: isBottom ? 0 : null,
-            left: 0,
-            right: 0,
-            top: !isBottom ? null : null,
-            child: Container(
-              margin: isBottom
-                  ? EdgeInsets.zero
-                  : EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.25,
-                      right: MediaQuery.of(context).size.width * 0.25,
-                      top: MediaQuery.of(context).size.height * 0.3,
-                    ),
-              decoration: BoxDecoration(
-                color: AppColors.modalBg,
-                borderRadius: isBottom
-                    ? BorderRadius.zero
-                    : BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(35),
-                    child: Column(
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          message,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                    color: AppColors.borderGrayLight,
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: isBottom
-                        ? const EdgeInsets.all(30)
-                        : EdgeInsets.zero,
-                    child: Row(
-                      children: List.generate(
-                        buttons.length,
-                        (index) {
+
+          if (isBottom)
+            // Bottom sheet style
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: FractionallySizedBox(
+                    widthFactor: 0.5,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(buttons.length, (index) {
                           final button = buttons[index];
-                          return Expanded(
-                            child: Column(
-                              children: [
-                                if (index > 0 && !isBottom)
-                                  Divider(
-                                    height: 1,
-                                    color: AppColors.borderGrayLight,
-                                    thickness: 1,
+                          final isFirst = index == 0;
+                          return Column(
+                            children: [
+                              if (index > 0) const SizedBox(height: 10),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: TextButton(
+                                  onPressed: button.onPressed,
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: isFirst
+                                        ? const Color(0xFFEEEEEE)
+                                        : Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
-                                SizedBox(
+                                  child: Text(
+                                    button.label,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: button.color,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          else
+            // Center modal style
+            Positioned(
+              left: MediaQuery.of(context).size.width * 0.25,
+              right: MediaQuery.of(context).size.width * 0.25,
+              top: MediaQuery.of(context).size.height * 0.3,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.modalBg,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(35),
+                      child: Column(
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      height: 1,
+                      color: AppColors.borderGrayLight,
+                      thickness: 1,
+                    ),
+                    Row(
+                      children: List.generate(buttons.length, (index) {
+                        final button = buttons[index];
+                        return Expanded(
+                          child: Row(
+                            children: [
+                              if (index > 0)
+                                const VerticalDivider(
+                                  width: 1,
+                                  color: AppColors.borderGrayLight,
+                                  thickness: 1,
+                                ),
+                              Expanded(
+                                child: SizedBox(
                                   height: 60,
                                   child: TextButton(
                                     onPressed: button.onPressed,
                                     style: TextButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: isBottom
-                                            ? BorderRadius.circular(8)
-                                            : BorderRadius.zero,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
                                       ),
                                     ),
                                     child: Text(
@@ -128,19 +160,16 @@ class PopupModal extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (isBottom && index < buttons.length - 1)
-                                  const SizedBox(height: 10),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

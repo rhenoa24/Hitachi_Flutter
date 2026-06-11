@@ -19,6 +19,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   bool _showLogoutUI = false;
   bool _isLoading = true;
+  String _loadingText = 'Fetching Data';
   List<Social> _socials = [];
 
   @override
@@ -46,6 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final authService = Provider.of<AuthService>(context, listen: false);
     setState(() {
       _isLoading = true;
+      _loadingText = 'Logging Out';
     });
 
     authService.logout();
@@ -73,7 +75,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: _isLoading
-          ? LoadingWidget(loadingText: 'Fetching Data')
+          ? LoadingWidget(loadingText: _loadingText)
           : Stack(
               children: [
                 Column(

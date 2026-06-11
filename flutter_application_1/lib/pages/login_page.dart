@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _showError = false;
   bool _loginFailed = false;
   String _usernameError = '';
+  String _loadingText = 'Logging In';
 
   @override
   void dispose() {
@@ -70,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() {
       _isLoading = true;
+      _loadingText = 'Logging In';
     });
 
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -79,6 +81,9 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (result != null) {
+      setState(() {
+        _loadingText = 'Fetching Data';
+      });
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/dashboard');
       }
@@ -86,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       _clearInput();
       setState(() {
         _isLoading = false;
+        _loadingText = 'Logging In';
         _loginFailed = true;
         _step = 'username';
       });
@@ -115,9 +121,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: _isLoading
-            ? LoadingWidget(
-                loadingText: _step == 'otp' ? 'Verifying OTP' : 'Logging in',
-              )
+            ? LoadingWidget(loadingText: _loadingText)
             : Stack(
                 children: [
                   SingleChildScrollView(

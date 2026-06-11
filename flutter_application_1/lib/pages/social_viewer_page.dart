@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants/colors.dart';
+import '../constants/colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../models/social.dart';
 import '../widgets/page_header.dart';
@@ -26,7 +26,7 @@ class _SocialViewerPageState extends State<SocialViewerPage> {
       case 'facebook':
         return AppColors.primaryBlue;
       default:
-        return const Color(0xFF67AD5B);
+        return AppColors.textPrimary;
     }
   }
 

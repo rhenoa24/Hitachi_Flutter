@@ -17,7 +17,7 @@ class SocialCardPage extends StatelessWidget {
       case 'facebook':
         return AppColors.primaryBlue;
       default:
-        return AppColors.primaryGreen;
+        return AppColors.textPrimary;
     }
   }
 

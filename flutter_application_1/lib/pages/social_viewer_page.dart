@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/constants/colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../models/social.dart';
 import '../widgets/page_header.dart';
@@ -19,11 +20,11 @@ class _SocialViewerPageState extends State<SocialViewerPage> {
   Color _getThemeColor() {
     switch (widget.social.name.toLowerCase()) {
       case 'youtube':
-        return const Color(0xFFFF0000);
+        return AppColors.primaryRed;
       case 'spotify':
-        return const Color(0xFF1DB954);
+        return AppColors.primaryGreen;
       case 'facebook':
-        return const Color(0xFF1877F2);
+        return AppColors.primaryBlue;
       default:
         return const Color(0xFF67AD5B);
     }

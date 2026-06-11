@@ -85,8 +85,15 @@ class _OthersPageState extends State<OthersPage> {
 
   void _visitWebsite() async {
     final brand = _brands[_currentIndex];
-    if (await canLaunchUrl(Uri.parse(brand.webUrl))) {
-      await launchUrl(Uri.parse(brand.webUrl));
+    final uri = Uri.parse(brand.webUrl);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open ${brand.name} website')),
+        );
+      }
     }
   }
 
@@ -173,7 +180,7 @@ class _OthersPageState extends State<OthersPage> {
                       height: 56,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryGreen,
+                          backgroundColor: AppColors.primaryYellow,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -204,7 +211,7 @@ class _OthersPageState extends State<OthersPage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: index == _currentIndex
-                                  ? AppColors.primaryGreen
+                                  ? AppColors.primaryYellow
                                   : AppColors.borderGray,
                             ),
                           ),

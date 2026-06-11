@@ -11,11 +11,11 @@ class SocialCardPage extends StatelessWidget {
   Color _getThemeColor() {
     switch (social.name.toLowerCase()) {
       case 'youtube':
-        return const Color(0xFFFF0000);
+        return AppColors.primaryRed;
       case 'spotify':
-        return const Color(0xFF1DB954);
+        return AppColors.primaryGreen;
       case 'facebook':
-        return const Color(0xFF1877F2);
+        return AppColors.primaryBlue;
       default:
         return AppColors.primaryGreen;
     }

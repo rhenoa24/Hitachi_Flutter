@@ -64,17 +64,17 @@ class SocialService extends ChangeNotifier {
         Brand(
           name: 'Samsung',
           logoUrl: 'assets/samsung.png',
-          webUrl: 'https://samsung.com',
+          webUrl: 'https://www.samsung.com',
         ),
         Brand(
           name: 'Apple',
           logoUrl: 'assets/apple.png',
-          webUrl: 'https://apple.com',
+          webUrl: 'https://www.apple.com',
         ),
         Brand(
           name: 'Microsoft',
           logoUrl: 'assets/windows.png',
-          webUrl: 'https://microsoft.com',
+          webUrl: 'https://www.microsoft.com',
         ),
       ];
 

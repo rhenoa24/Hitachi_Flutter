@@ -145,12 +145,12 @@ class _OthersPageState extends State<OthersPage> {
             child: SafeArea(
               top: false,
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                      child: Text(
                         'You might also like',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -158,109 +158,119 @@ class _OthersPageState extends State<OthersPage> {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      // Carousel
-                      Stack(
-                        alignment: Alignment.center,
+                    ),
+                    const SizedBox(height: 30),
+                    // Carousel — no horizontal padding
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          height: 260,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentIndex = index % _brands.length;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              final brand = _brands[index % _brands.length];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 12,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.10),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: const EdgeInsets.all(24),
+                                  child: Image.asset(
+                                    brand.logoUrl,
+                                    fit: BoxFit.contain,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Center(child: Text(brand.name)),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Rest of content back inside padding
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          Text(
+                            currentBrand.name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                           SizedBox(
-                            height: 260,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentIndex = index % _brands.length;
-                                });
-                              },
-                              itemBuilder: (context, index) {
-                                final brand = _brands[index % _brands.length];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 12,
+                            height: 56,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryYellow,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: _visitWebsite,
+                              child: Text(
+                                'Visit ${currentBrand.name} Website',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Dot indicators
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              _brands.length,
+                              (index) => GestureDetector(
+                                onTap: () => _goTo(index),
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 5,
                                   ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.10),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    padding: const EdgeInsets.all(24),
-                                    child: Image.asset(
-                                      brand.logoUrl,
-                                      fit: BoxFit.contain,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Center(child: Text(brand.name)),
-                                    ),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: index == _currentIndex
+                                        ? AppColors.primaryYellow
+                                        : AppColors.borderGray,
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        currentBrand.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        height: 56,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryYellow,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: _visitWebsite,
-                          child: Text(
-                            'Visit ${currentBrand.name} Website',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Dot indicators
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          _brands.length,
-                          (index) => GestureDetector(
-                            onTap: () => _goTo(index),
-                            child: Container(
-                              width: 10,
-                              height: 10,
-                              margin: const EdgeInsets.symmetric(horizontal: 5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: index == _currentIndex
-                                    ? AppColors.primaryYellow
-                                    : AppColors.borderGray,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

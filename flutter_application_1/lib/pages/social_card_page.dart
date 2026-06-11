@@ -74,7 +74,10 @@ class SocialCardPage extends StatelessWidget {
                     ),
                     // Only text and button get padding
                     Padding(
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [

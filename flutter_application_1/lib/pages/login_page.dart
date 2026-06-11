@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
 
                               Transform.translate(
-                                offset: const Offset(150,60),
+                                offset: const Offset(150, 60),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Image.asset(
@@ -189,15 +189,10 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(
-                                      color: AppColors.primaryDarkBlue,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(
-                                      color: AppColors.primaryRed,
+                                    borderSide: BorderSide(
+                                      color: _showError
+                                          ? AppColors.primaryRed
+                                          : AppColors.primaryDarkBlue,
                                       width: 2,
                                     ),
                                   ),
@@ -206,18 +201,28 @@ class _LoginPageState extends State<LoginPage> {
                                     vertical: 20,
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _showError = !_isValidUsername(value);
+                                  });
+                                },
                                 onSubmitted: (_) => _submitUsername(),
                               ),
                               const SizedBox(height: 4),
-                              if (_showError && _step == 'username')
-                                Text(
-                                  _usernameError,
-                                  style: const TextStyle(
-                                    color: AppColors.primaryRed,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              const SizedBox(height: 4),
+                              SizedBox(
+                                height: 17,
+                                child: _showError && _step == 'username'
+                                    ? Text(
+                                        _usernameError,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: AppColors.primaryRed,
+                                          fontSize: 12,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                              const SizedBox(height: 8),
                               SizedBox(
                                 width: double.infinity,
                                 height: 56,

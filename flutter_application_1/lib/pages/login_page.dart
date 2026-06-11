@@ -359,12 +359,22 @@ class _LoginPageState extends State<LoginPage> {
                                           child: SizedBox(
                                             height: 60,
                                             child: TextButton(
-                                              onPressed: _submitOtp,
-                                              child: const Text(
+                                              onPressed:
+                                                  _otpController.text.length ==
+                                                      6
+                                                  ? _submitOtp
+                                                  : null,
+                                              child: Text(
                                                 'Enter',
                                                 style: TextStyle(
                                                   fontSize: 14,
-                                                  color: AppColors.primaryGreen,
+                                                  color:
+                                                      _otpController
+                                                              .text
+                                                              .length ==
+                                                          6
+                                                      ? AppColors.primaryGreen
+                                                      : AppColors.disabledBg,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),

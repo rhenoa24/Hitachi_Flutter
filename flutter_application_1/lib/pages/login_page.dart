@@ -59,7 +59,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _submitOtp() async {
-    if (_otpController.text.length != 6 || !RegExp(r'^[0-9]{6}$').hasMatch(_otpController.text)) {
+    if (_otpController.text.length != 6 ||
+        !RegExp(r'^[0-9]{6}$').hasMatch(_otpController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a valid 6-digit OTP')),
       );
@@ -111,52 +112,53 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SingleChildScrollView(
                   child: SizedBox(
+                    width: double.infinity,
                     height: MediaQuery.of(context).size.height,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         // Logo section
+                        // Logo section
                         SizedBox(
-                          height: 247,
+                          height: 200,
                           child: Stack(
-                            alignment: Alignment.center,
                             children: [
-                              Positioned(
-                                left: 0,
-                                top: -30,
-                                child: Image.asset(
-                                  'assets/youtube.png',
-                                  width: 200,
-                                  height: 200,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 200,
-                                      height: 200,
-                                      color: AppColors.bgGray,
-                                      child: const Center(
-                                        child: Text('YouTube'),
-                                      ),
-                                    );
-                                  },
+                              Transform.translate(
+                                offset: const Offset(-150, -60),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.asset(
+                                    'assets/youtube.png',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                              Positioned(
-                                right: 0,
-                                bottom: -30,
-                                child: Image.asset(
-                                  'assets/spotify.png',
-                                  width: 200,
-                                  height: 200,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 200,
-                                      height: 200,
-                                      color: AppColors.bgGray,
-                                      child: const Center(
-                                        child: Text('Spotify'),
-                                      ),
-                                    );
-                                  },
+
+                              Transform.translate(
+                                offset: const Offset(0, 0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.asset(
+                                    'assets/spotify.png',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+
+                              Transform.translate(
+                                offset: const Offset(150,60),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.asset(
+                                    'assets/facebook.png',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ],
@@ -255,9 +257,7 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () {
                               // Don't close on overlay tap
                             },
-                            child: Container(
-                              color: AppColors.overlayDark,
-                            ),
+                            child: Container(color: AppColors.overlayDark),
                           ),
                         ),
                         Positioned(
@@ -368,9 +368,7 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () {
                               // Don't close on overlay tap
                             },
-                            child: Container(
-                              color: AppColors.overlayDark,
-                            ),
+                            child: Container(color: AppColors.overlayDark),
                           ),
                         ),
                         Positioned(

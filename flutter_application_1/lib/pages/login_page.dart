@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String _step = 'username'; // username or otp
   bool _isLoading = false;
   bool _showError = false;
+  bool _loginFailed = false;
   String _usernameError = '';
 
   @override
@@ -55,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _step = 'otp';
       _showError = false;
+      _loginFailed = false;
     });
   }
 
@@ -80,23 +82,29 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pushReplacementNamed('/dashboard');
       }
     } else {
+      _closeOtp();
       setState(() {
         _isLoading = false;
-        _showError = true;
+        _loginFailed = true;
       });
     }
   }
 
   void _closeOtp() {
+    _clearInput();
     setState(() {
       _step = 'username';
-      _otpController.clear();
     });
+  }
+
+  void _clearInput() {
+    _usernameController.clear();
+    _otpController.clear();
   }
 
   void _closeError() {
     setState(() {
-      _showError = false;
+      _loginFailed = false;
     });
   }
 
@@ -383,7 +391,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 // Error Modal
-                if (_showError && _step == 'otp')
+                if (_loginFailed)
                   Material(
                     type: MaterialType.transparency,
                     child: Stack(
@@ -417,6 +425,7 @@ class _LoginPageState extends State<LoginPage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
                                         ),
                                       ),
                                       const SizedBox(height: 16),
@@ -425,7 +434,7 @@ class _LoginPageState extends State<LoginPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: AppColors.textSecondary,
+                                          color: AppColors.textPrimary,
                                         ),
                                       ),
                                     ],

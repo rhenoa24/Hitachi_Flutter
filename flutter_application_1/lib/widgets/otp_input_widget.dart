@@ -76,7 +76,6 @@ class _OtpInputWidgetState extends State<OtpInputWidget> {
               counterText: '',
               filled: true,
               fillColor: Colors.white,
-              color: Colors.black,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

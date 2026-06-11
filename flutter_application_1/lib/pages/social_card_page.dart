@@ -30,21 +30,34 @@ class SocialCardPage extends StatelessWidget {
     final themeColor = _getThemeColor();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              PageHeader(
+      body: Column(
+        children: [
+          // Header sits outside SafeArea so it colors the status bar area too
+          Container(
+            color: themeColor,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top:
+                    MediaQuery.of(context).padding.top *
+                    0.6, // adjust multiplier (0–1)
+              ),
+              child: PageHeader(
                 onBackPressed: () => Navigator.pop(context),
                 title: social.name,
                 backgroundColor: themeColor,
                 foregroundColor: Colors.white,
               ),
-              Padding(
-                padding: const EdgeInsets.all(30),
+            ),
+          ),
+          // Rest of content wrapped in SafeArea (sides + bottom only)
+          Expanded(
+            child: SafeArea(
+              top: false,
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    // Image reaches full width
                     Image.network(
                       social.imgUrl,
                       height: 300,
@@ -59,42 +72,51 @@ class SocialCardPage extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      social.history,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textPrimary,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 56,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: themeColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    // Only text and button get padding
+                    Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            social.history,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textPrimary,
+                              height: 1.5,
+                            ),
                           ),
-                        ),
-                        onPressed: () => _openViewer(context),
-                        child: Text(
-                          'Visit ${social.name}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: 56,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: themeColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () => _openViewer(context),
+                              child: Text(
+                                'Visit ${social.name}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

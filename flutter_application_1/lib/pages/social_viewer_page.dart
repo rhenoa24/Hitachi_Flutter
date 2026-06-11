@@ -49,26 +49,32 @@ class _SocialViewerPageState extends State<SocialViewerPage> {
     final themeColor = _getThemeColor();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            PageHeader(
-              onBackPressed: () => Navigator.pop(context),
-              title: widget.social.name,
-              backgroundColor: themeColor,
-              foregroundColor: Colors.white,
-            ),
-            Expanded(
-              child: Stack(
-                children: [
-                  WebViewWidget(controller: _controller),
-                  if (_isLoading)
-                    const Center(child: CircularProgressIndicator()),
-                ],
+      body: Column(
+        children: [
+          Container(
+            color: themeColor,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top * 0.6,
+              ),
+              child: PageHeader(
+                onBackPressed: () => Navigator.pop(context),
+                title: widget.social.name,
+                backgroundColor: themeColor,
+                foregroundColor: Colors.white,
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _controller),
+                if (_isLoading)
+                  const Center(child: CircularProgressIndicator()),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

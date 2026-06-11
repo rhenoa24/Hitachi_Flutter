@@ -43,7 +43,7 @@ class PopupModal extends StatelessWidget {
                 color: Colors.transparent,
                 child: Center(
                   child: FractionallySizedBox(
-                    widthFactor: 0.5,
+                    widthFactor: 0.7,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 30),
                       child: Column(

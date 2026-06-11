@@ -6,12 +6,14 @@ class OtpInputWidget extends StatefulWidget {
   final int length;
   final Function(String) onChanged;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
 
   const OtpInputWidget({
     Key? key,
     this.length = 6,
     required this.onChanged,
     this.controller,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -20,19 +22,24 @@ class OtpInputWidget extends StatefulWidget {
 
 class _OtpInputWidgetState extends State<OtpInputWidget> {
   late final TextEditingController _hiddenController;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _focusNode;
+  late final bool _ownsController;
+  late final bool _ownsFocusNode;
 
   @override
   void initState() {
     super.initState();
     _hiddenController = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _ownsController = widget.controller == null;
+    _ownsFocusNode = widget.focusNode == null;
     _focusNode.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    if (widget.controller == null) _hiddenController.dispose();
-    _focusNode.dispose();
+    if (_ownsController) _hiddenController.dispose();
+    if (_ownsFocusNode) _focusNode.dispose();
     super.dispose();
   }
 

@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _otpController = TextEditingController();
+  final _otpFocusNode = FocusNode();
   String _step = 'username'; // username or otp
   bool _isLoading = false;
   bool _showError = false;
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _usernameController.dispose();
     _otpController.dispose();
+    _otpFocusNode.dispose();
     super.dispose();
   }
 
@@ -57,6 +59,9 @@ class _LoginPageState extends State<LoginPage> {
       _step = 'otp';
       _showError = false;
       _loginFailed = false;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _otpFocusNode.requestFocus();
     });
   }
 
@@ -192,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           // Login form
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.7,
                             child: Column(
                               children: [
                                 TextField(
@@ -339,6 +344,7 @@ class _LoginPageState extends State<LoginPage> {
                                           const SizedBox(height: 20),
                                           OtpInputWidget(
                                             controller: _otpController,
+                                            focusNode: _otpFocusNode,
                                             onChanged: (value) {
                                               setState(() {
                                                 _otpController.text = value;

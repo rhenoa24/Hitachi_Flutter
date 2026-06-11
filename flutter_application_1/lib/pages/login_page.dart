@@ -227,17 +227,28 @@ class _LoginPageState extends State<LoginPage> {
                                 width: double.infinity,
                                 height: 56,
                                 child: ElevatedButton(
+                                  onPressed:
+                                      _isValidUsername(_usernameController.text)
+                                      ? _submitUsername
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primaryGreen,
+                                    disabledBackgroundColor: const Color(
+                                      0xFFDCDCDC,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  onPressed: _submitUsername,
-                                  child: const Text(
+                                  child: Text(
                                     'Enter',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color:
+                                          _isValidUsername(
+                                            _usernameController.text,
+                                          )
+                                          ? Colors.white
+                                          : const Color(0xFF898989),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                     ),

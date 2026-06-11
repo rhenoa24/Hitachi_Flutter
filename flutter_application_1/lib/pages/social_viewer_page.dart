@@ -16,6 +16,19 @@ class _SocialViewerPageState extends State<SocialViewerPage> {
   late final WebViewController _controller;
   bool _isLoading = true;
 
+  Color _getThemeColor() {
+    switch (widget.social.name.toLowerCase()) {
+      case 'youtube':
+        return const Color(0xFFFF0000);
+      case 'spotify':
+        return const Color(0xFF1DB954);
+      case 'facebook':
+        return const Color(0xFF1877F2);
+      default:
+        return const Color(0xFF67AD5B);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,24 +45,29 @@ class _SocialViewerPageState extends State<SocialViewerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = _getThemeColor();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          PageHeader(
-            onBackPressed: () => Navigator.pop(context),
-            title: widget.social.name,
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                WebViewWidget(controller: _controller),
-                if (_isLoading)
-                  const Center(child: CircularProgressIndicator()),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            PageHeader(
+              onBackPressed: () => Navigator.pop(context),
+              title: widget.social.name,
+              backgroundColor: themeColor,
+              foregroundColor: Colors.white,
             ),
-          ),
-        ],
+            Expanded(
+              child: Stack(
+                children: [
+                  WebViewWidget(controller: _controller),
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

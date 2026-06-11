@@ -72,103 +72,105 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _isLoading
-          ? LoadingWidget(loadingText: 'Fetching Data')
-          : Stack(
-              children: [
-                Column(
-                  children: [
-                    // Header
-                    Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: _showLogout,
-                            child: CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                session?.profilePicture ?? '',
+      body: SafeArea(
+        child: _isLoading
+            ? LoadingWidget(loadingText: 'Fetching Data')
+            : Stack(
+                children: [
+                  Column(
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: _showLogout,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundImage: NetworkImage(
+                                  session?.profilePicture ?? '',
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                session?.userName ?? 'User',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  session?.userName ?? 'User',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                session?.userId ?? '',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textSecondary,
+                                Text(
+                                  session?.userId ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    // Content
-                    Expanded(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 80),
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 30,
-                                  crossAxisSpacing: 30,
-                                ),
-                            itemCount: _socials.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index < _socials.length) {
-                                final social = _socials[index];
-                                return SocialCardWidget(
-                                  name: social.name,
-                                  imageUrl: social.iconUrl,
-                                  onTap: () => _openSocial(social),
-                                );
-                              } else {
-                                return OthersButton(onTap: _openOthers);
-                              }
-                            },
+                      // Content
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 80),
+                            child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 30,
+                                    crossAxisSpacing: 30,
+                                  ),
+                              itemCount: _socials.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < _socials.length) {
+                                  final social = _socials[index];
+                                  return SocialCardWidget(
+                                    name: social.name,
+                                    imageUrl: social.iconUrl,
+                                    onTap: () => _openSocial(social),
+                                  );
+                                } else {
+                                  return OthersButton(onTap: _openOthers);
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                // Logout Modal
-                if (_showLogoutUI)
-                  PopupModal(
-                    title: '',
-                    message: '',
-                    isVisible: _showLogoutUI,
-                    isBottom: true,
-                    buttons: [
-                      PopupButton(
-                        label: 'Logout',
-                        color: AppColors.primaryRed,
-                        onPressed: _logout,
-                      ),
-                      PopupButton(
-                        label: 'Cancel',
-                        color: AppColors.primaryBlue,
-                        onPressed: _showLogout,
-                      ),
                     ],
                   ),
-              ],
-            ),
+                  // Logout Modal
+                  if (_showLogoutUI)
+                    PopupModal(
+                      title: '',
+                      message: '',
+                      isVisible: _showLogoutUI,
+                      isBottom: true,
+                      buttons: [
+                        PopupButton(
+                          label: 'Logout',
+                          color: AppColors.primaryRed,
+                          onPressed: _logout,
+                        ),
+                        PopupButton(
+                          label: 'Cancel',
+                          color: AppColors.primaryBlue,
+                          onPressed: _showLogout,
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+      ),
     );
   }
 }

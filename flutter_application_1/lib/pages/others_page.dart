@@ -19,6 +19,7 @@ class _OthersPageState extends State<OthersPage> {
   int _currentIndex = 0;
   bool _isLoading = true;
   Timer? _autoplayTimer;
+  PageController? _pageController;
 
   @override
   void initState() {
@@ -29,15 +30,17 @@ class _OthersPageState extends State<OthersPage> {
   @override
   void dispose() {
     _stopAutoplay();
+    _pageController?.dispose();
     super.dispose();
   }
 
   void _startAutoplay() {
     _autoplayTimer = Timer.periodic(const Duration(seconds: 3), (_) {
-      if (mounted) {
-        setState(() {
-          _currentIndex = (_currentIndex + 1) % _brands.length;
-        });
+      if (mounted && (_pageController?.hasClients ?? false)) {
+        _pageController!.nextPage(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
       }
     });
   }
@@ -55,6 +58,10 @@ class _OthersPageState extends State<OthersPage> {
   void _loadBrands() async {
     final socialService = Provider.of<SocialService>(context, listen: false);
     final brands = await socialService.getBrands();
+    _pageController = PageController(
+      viewportFraction: 0.78,
+      initialPage: brands.length * 500,
+    );
     setState(() {
       _brands = brands;
       _isLoading = false;
@@ -63,23 +70,34 @@ class _OthersPageState extends State<OthersPage> {
   }
 
   void _prev() {
-    setState(() {
-      _currentIndex = (_currentIndex - 1 + _brands.length) % _brands.length;
-    });
+    _pageController?.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
     _resetAutoplay();
   }
 
   void _next() {
-    setState(() {
-      _currentIndex = (_currentIndex + 1) % _brands.length;
-    });
+    _pageController?.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
     _resetAutoplay();
   }
 
   void _goTo(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    if (_pageController == null || !_pageController!.hasClients) return;
+    final currentPage = _pageController!.page!.round();
+    final currentInLoop = currentPage % _brands.length;
+    int diff = index - currentInLoop;
+    if (diff > _brands.length / 2) diff -= _brands.length;
+    if (diff < -(_brands.length / 2)) diff += _brands.length;
+    _pageController!.animateToPage(
+      currentPage + diff,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() => _currentIndex = index);
     _resetAutoplay();
   }
 
@@ -142,39 +160,51 @@ class _OthersPageState extends State<OthersPage> {
                       ),
                       const SizedBox(height: 30),
                       // Carousel
-                      SizedBox(
-                        height: 250,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_left),
-                              onPressed: _prev,
-                              iconSize: 32,
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            height: 260,
+                            child: PageView.builder(
+                              controller: _pageController,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  _currentIndex = index % _brands.length;
+                                });
+                              },
+                              itemBuilder: (context, index) {
+                                final brand = _brands[index % _brands.length];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 12,
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.10),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(24),
+                                    child: Image.asset(
+                                      brand.logoUrl,
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Center(child: Text(brand.name)),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            Expanded(
-                              child: Center(
-                                child: Image.asset(
-                                  currentBrand.logoUrl,
-                                  height: 200,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: AppColors.bgGray,
-                                      child: Center(
-                                        child: Text(currentBrand.name),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right),
-                              onPressed: _next,
-                              iconSize: 32,
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       Text(

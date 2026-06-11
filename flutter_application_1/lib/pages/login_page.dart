@@ -297,6 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
                                         ),
                                       ),
                                       const SizedBox(height: 16),
@@ -305,7 +306,7 @@ class _LoginPageState extends State<LoginPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: AppColors.textSecondary,
+                                          color: AppColors.textPrimary,
                                         ),
                                       ),
                                       const SizedBox(height: 20),
@@ -349,8 +350,16 @@ class _LoginPageState extends State<LoginPage> {
                                       thickness: 1,
                                     ),
                                     Expanded(
-                                      child: SizedBox(
+                                      child: Container(
                                         height: 60,
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            left: BorderSide(
+                                              color: AppColors.borderGrayLight,
+                                              width: 1,
+                                            ),
+                                          ),
+                                        ),
                                         child: TextButton(
                                           onPressed: _closeOtp,
                                           child: const Text(

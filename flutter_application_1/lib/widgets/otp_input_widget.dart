@@ -65,9 +65,18 @@ class _OtpInputWidgetState extends State<OtpInputWidget> {
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
+            cursorColor: AppColors.primaryDarkBlue,
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
             onChanged: (value) => _onChanged(value, index),
             decoration: InputDecoration(
               counterText: '',
+              filled: true,
+              fillColor: Colors.white,
+              color: Colors.black,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

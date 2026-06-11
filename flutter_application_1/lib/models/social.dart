@@ -15,11 +15,19 @@ class Social {
 
   factory Social.fromJson(Map<String, dynamic> json) {
     return Social(
-      name: json['name'] as String,
-      history: json['history'] as String,
-      iconUrl: json['iconUrl'] as String,
-      imgUrl: json['imgUrl'] as String,
-      webUrl: json['webUrl'] as String,
+      name: (json['name'] ?? json['title'] ?? '').toString(),
+      history: (json['history'] ?? json['description'] ?? json['about'] ?? '')
+          .toString(),
+      iconUrl: (json['iconUrl'] ?? json['icon'] ?? json['logo'] ?? '')
+          .toString(),
+      imgUrl:
+          (json['imgUrl'] ??
+                  json['imageUrl'] ??
+                  json['image'] ??
+                  json['img'] ??
+                  '')
+              .toString(),
+      webUrl: (json['webUrl'] ?? json['url'] ?? json['link'] ?? '').toString(),
     );
   }
 

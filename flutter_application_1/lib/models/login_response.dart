@@ -13,10 +13,15 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      userId: json['userId'] as String,
-      userName: json['userName'] as String,
-      loginStatus: json['loginStatus'] as String,
-      profilePicture: json['profilePicture'] as String,
+      userId: (json['userId'] ?? json['id'] ?? json['user_id'] ?? '')
+          .toString(),
+      userName: (json['userName'] ?? json['username'] ?? json['name'] ?? '')
+          .toString(),
+      loginStatus: (json['loginStatus'] ?? json['status'] ?? 'success')
+          .toString(),
+      profilePicture:
+          (json['profilePicture'] ?? json['avatar'] ?? json['picture'] ?? '')
+              .toString(),
     );
   }
 

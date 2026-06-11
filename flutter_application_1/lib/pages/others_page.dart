@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,11 +18,38 @@ class _OthersPageState extends State<OthersPage> {
   late List<Brand> _brands;
   int _currentIndex = 0;
   bool _isLoading = true;
+  Timer? _autoplayTimer;
 
   @override
   void initState() {
     super.initState();
     _loadBrands();
+  }
+
+  @override
+  void dispose() {
+    _stopAutoplay();
+    super.dispose();
+  }
+
+  void _startAutoplay() {
+    _autoplayTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (mounted) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % _brands.length;
+        });
+      }
+    });
+  }
+
+  void _stopAutoplay() {
+    _autoplayTimer?.cancel();
+    _autoplayTimer = null;
+  }
+
+  void _resetAutoplay() {
+    _stopAutoplay();
+    _startAutoplay();
   }
 
   void _loadBrands() async {
@@ -31,24 +59,28 @@ class _OthersPageState extends State<OthersPage> {
       _brands = brands;
       _isLoading = false;
     });
+    _startAutoplay();
   }
 
   void _prev() {
     setState(() {
       _currentIndex = (_currentIndex - 1 + _brands.length) % _brands.length;
     });
+    _resetAutoplay();
   }
 
   void _next() {
     setState(() {
       _currentIndex = (_currentIndex + 1) % _brands.length;
     });
+    _resetAutoplay();
   }
 
   void _goTo(int index) {
     setState(() {
       _currentIndex = index;
     });
+    _resetAutoplay();
   }
 
   void _visitWebsite() async {
@@ -61,11 +93,7 @@ class _OthersPageState extends State<OthersPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final currentBrand = _brands[_currentIndex];
@@ -111,9 +139,7 @@ class _OthersPageState extends State<OthersPage> {
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   color: AppColors.bgGray,
-                                  child: Center(
-                                    child: Text(currentBrand.name),
-                                  ),
+                                  child: Center(child: Text(currentBrand.name)),
                                 );
                               },
                             ),

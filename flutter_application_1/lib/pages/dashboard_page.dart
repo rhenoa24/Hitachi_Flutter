@@ -47,9 +47,9 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {
       _isLoading = true;
     });
-    
+
     authService.logout();
-    
+
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/login');
@@ -58,10 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _openSocial(Social social) {
-    Navigator.of(context).pushNamed(
-      '/social',
-      arguments: social,
-    );
+    Navigator.of(context).pushNamed('/social', arguments: social);
   }
 
   void _openOthers() {
@@ -127,10 +124,10 @@ class _DashboardPageState extends State<DashboardPage> {
                           child: GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 30,
-                              crossAxisSpacing: 30,
-                            ),
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 30,
+                                  crossAxisSpacing: 30,
+                                ),
                             itemCount: _socials.length + 1,
                             itemBuilder: (context, index) {
                               if (index < _socials.length) {
@@ -141,9 +138,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   onTap: () => _openSocial(social),
                                 );
                               } else {
-                                return OthersButton(
-                                  onTap: _openOthers,
-                                );
+                                return OthersButton(onTap: _openOthers);
                               }
                             },
                           ),

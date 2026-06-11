@@ -1,49 +1,56 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/social.dart';
 import '../models/brand.dart';
 
 class SocialService extends ChangeNotifier {
+  static const _baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://indexcodex.com',
+  );
+
   List<Social> _socials = [];
   List<Brand> _brands = [];
+  Future<List<Social>>? _cachedSocialsFuture;
 
   List<Social> get socials => _socials;
   List<Brand> get brands => _brands;
 
-  Future<List<Social>> getSocials() async {
+  Future<List<Social>> getSocials() {
+    _cachedSocialsFuture ??= _fetchSocials();
+    return _cachedSocialsFuture!;
+  }
+
+  Future<List<Social>> _fetchSocials() async {
     try {
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      final response = await http.get(
+        Uri.parse('$_baseUrl/api/v1/socials'),
+        headers: {'CLIENT_ID': 'rgbexam'},
+      );
 
-      _socials = [
-        Social(
-          name: 'YouTube',
-          history: 'YouTube is a video sharing platform founded in 2005.',
-          iconUrl: 'assets/youtube.png',
-          imgUrl: 'https://via.placeholder.com/400x300?text=YouTube',
-          webUrl: 'https://youtube.com',
-        ),
-        Social(
-          name: 'Spotify',
-          history: 'Spotify is a music streaming service founded in 2006.',
-          iconUrl: 'assets/spotify.png',
-          imgUrl: 'https://via.placeholder.com/400x300?text=Spotify',
-          webUrl: 'https://spotify.com',
-        ),
-        Social(
-          name: 'Facebook',
-          history: 'Facebook is a social media platform founded in 2004.',
-          iconUrl: 'assets/facebook.png',
-          imgUrl: 'https://via.placeholder.com/400x300?text=Facebook',
-          webUrl: 'https://facebook.com',
-        ),
-      ];
-
-      notifyListeners();
-      return _socials;
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> list = data is List
+            ? data
+            : data['socials'] ?? data['data'] ?? [];
+        _socials = list.map((item) => Social.fromJson(item)).toList();
+        notifyListeners();
+        return _socials;
+      } else {
+        if (kDebugMode) {
+          print(
+            'Failed to fetch socials: ${response.statusCode} - ${response.body}',
+          );
+        }
+        _cachedSocialsFuture = null; // allow retry on failure
+        return [];
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error fetching socials: $e');
       }
+      _cachedSocialsFuture = null; // allow retry on failure
       return [];
     }
   }

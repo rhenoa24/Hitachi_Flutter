@@ -74,10 +74,12 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final result = await authService.verifyOtp(_otpController.text);
+    final result = await authService.login(
+      _usernameController.text,
+      _otpController.text,
+    );
 
-    if (result) {
-      await authService.login(_usernameController.text);
+    if (result != null) {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/dashboard');
       }

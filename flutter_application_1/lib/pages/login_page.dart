@@ -99,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _closeOtp() {
+    _otpController.clear();
     setState(() {
       _step = 'username';
     });
@@ -297,113 +298,104 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Positioned.fill(
                             child: GestureDetector(
-                              onTap: () {
-                                // Don't close on overlay tap
-                              },
+                              onTap: () {},
                               child: Container(color: AppColors.overlayDark),
                             ),
                           ),
-                          Positioned(
-                            left: MediaQuery.of(context).size.width * 0.25,
-                            right: MediaQuery.of(context).size.width * 0.25,
-                            top: MediaQuery.of(context).size.height * 0.3,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.modalBg,
-                                borderRadius: BorderRadius.circular(20),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(35),
-                                    child: Column(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.modalBg,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(35),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            "Verify It's You",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          const Text(
+                                            'Please enter your 6 digit PIN',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          OtpInputWidget(
+                                            controller: _otpController,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _otpController.text = value;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      height: 1,
+                                      color: AppColors.borderGrayLight,
+                                      thickness: 1,
+                                    ),
+                                    Row(
                                       children: [
-                                        const Text(
-                                          "Verify It's You",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textPrimary,
+                                        Expanded(
+                                          child: SizedBox(
+                                            height: 60,
+                                            child: TextButton(
+                                              onPressed: _submitOtp,
+                                              child: const Text(
+                                                'Enter',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: AppColors.primaryGreen,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                        const SizedBox(height: 16),
-                                        const Text(
-                                          'Please enter your 6 digit PIN',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.textPrimary,
-                                          ),
+                                        Container(
+                                          width: 1,
+                                          height: 60,
+                                          color: AppColors.borderGrayLight,
                                         ),
-                                        const SizedBox(height: 20),
-                                        OtpInputWidget(
-                                          controller: _otpController,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _otpController.text = value;
-                                            });
-                                          },
+                                        Expanded(
+                                          child: SizedBox(
+                                            height: 60,
+                                            child: TextButton(
+                                              onPressed: _closeOtp,
+                                              child: const Text(
+                                                'Close',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: AppColors.primaryRed,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Divider(
-                                    height: 1,
-                                    color: AppColors.borderGrayLight,
-                                    thickness: 1,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: SizedBox(
-                                          height: 60,
-                                          child: TextButton(
-                                            onPressed: _submitOtp,
-                                            child: const Text(
-                                              'Enter',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColors.primaryGreen,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Divider(
-                                        height: 60,
-                                        color: AppColors.borderGrayLight,
-                                        thickness: 1,
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 60,
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              left: BorderSide(
-                                                color:
-                                                    AppColors.borderGrayLight,
-                                                width: 1,
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: _closeOtp,
-                                            child: const Text(
-                                              'Close',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColors.primaryRed,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -418,68 +410,69 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Positioned.fill(
                             child: GestureDetector(
-                              onTap: () {
-                                // Don't close on overlay tap
-                              },
+                              onTap: () {},
                               child: Container(color: AppColors.overlayDark),
                             ),
                           ),
-                          Positioned(
-                            left: MediaQuery.of(context).size.width * 0.25,
-                            right: MediaQuery.of(context).size.width * 0.25,
-                            top: MediaQuery.of(context).size.height * 0.3,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.modalBg,
-                                borderRadius: BorderRadius.circular(20),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(35),
-                                    child: Column(
-                                      children: [
-                                        const Text(
-                                          'Error',
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.modalBg,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(35),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            'Error',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          const Text(
+                                            'Login Failed. Please try again.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      height: 1,
+                                      color: AppColors.borderGrayLight,
+                                      thickness: 1,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 60,
+                                      child: TextButton(
+                                        onPressed: _closeError,
+                                        child: const Text(
+                                          'Close',
                                           style: TextStyle(
                                             fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textPrimary,
+                                            color: AppColors.primaryRed,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        const Text(
-                                          'Login Failed. Please try again.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.textPrimary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    height: 1,
-                                    color: AppColors.borderGrayLight,
-                                    thickness: 1,
-                                  ),
-                                  SizedBox(
-                                    height: 60,
-                                    child: TextButton(
-                                      onPressed: _closeError,
-                                      child: const Text(
-                                        'Close',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: AppColors.primaryRed,
-                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../constants/colors.dart';
 
 class OtpInputWidget extends StatefulWidget {
@@ -18,84 +19,80 @@ class OtpInputWidget extends StatefulWidget {
 }
 
 class _OtpInputWidgetState extends State<OtpInputWidget> {
-  late List<TextEditingController> _controllers;
+  late final TextEditingController _hiddenController;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(
-      widget.length,
-      (index) => TextEditingController(),
-    );
+    _hiddenController = widget.controller ?? TextEditingController();
+    _focusNode.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
+    if (widget.controller == null) _hiddenController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
-  void _onChanged(String value, int index) {
-    if (value.isNotEmpty && index < widget.length - 1) {
-      FocusScope.of(context).nextFocus();
-    }
-
-    final otp = _controllers.map((c) => c.text).join();
-    widget.onChanged(otp);
-
-    if (widget.controller != null) {
-      widget.controller!.text = otp;
-    }
+  void _onChanged(String value) {
+    setState(() {});
+    widget.onChanged(value);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        widget.length,
-        (index) => Container(
-          width: 45,
-          height: 50,
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          child: TextField(
-            controller: _controllers[index],
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            maxLength: 1,
-            cursorColor: AppColors.primaryDarkBlue,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-            onChanged: (value) => _onChanged(value, index),
-            decoration: InputDecoration(
-              counterText: '',
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: AppColors.borderGray,
-                  width: 2,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: AppColors.primaryDarkBlue,
-                  width: 2,
+    final value = _hiddenController.text;
+
+    return GestureDetector(
+      onTap: () => _focusNode.requestFocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Hidden real input — invisible but focusable
+          Opacity(
+            opacity: 0,
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: TextField(
+                controller: _hiddenController,
+                focusNode: _focusNode,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                maxLength: widget.length,
+                onChanged: _onChanged,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  counterText: '',
                 ),
               ),
             ),
           ),
-        ),
+          // Visual digit display
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(widget.length, (i) {
+              final char = i < value.length ? value[i] : '-';
+              final isActive = _focusNode.hasFocus && value.length == i;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  char,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: isActive
+                        ? AppColors.primaryDarkBlue
+                        : AppColors.textPrimary,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
